@@ -16,7 +16,7 @@ Built with HTML, CSS, JavaScript (and any frameworks/tools you used).
 - Bootstrap (if used)
 
 ## 🔗 Live Demo
-You can view the live site here: [GitHub Pages Link](https://SurbhiKaushal.github.io/portfolio-website)
+You can view the live site here: [GitHub Pages Link](https://surbhikaushal.github.io/portfolio-website/)
 
 ## 📬 Contact
 - **Name:** Surbhi Kaushal  
