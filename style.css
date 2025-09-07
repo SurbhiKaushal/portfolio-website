@@ -33,3 +33,12 @@ section {
   background: white;
   border-radius: 10px;
 }
+.projects-section { padding: 30px; max-width: 1000px; margin: 0 auto; }
+.project-card { border: 1px solid #e3e3e3; padding: 16px; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+.project-card h3 { margin: 0 0 6px; font-size: 1.15rem; }
+.project-card .desc { color: #444; margin-bottom: 10px; }
+.card-actions { display:flex; gap:10px; }
+.btn { padding:8px 12px; text-decoration:none; border-radius:6px; border:1px solid #ccc; background:#fff; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.06); transition: all .15s; }
+.btn-demo { border-color:#2b6cb0; }
+
