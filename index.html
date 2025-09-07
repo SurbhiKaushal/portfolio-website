@@ -35,9 +35,8 @@
   </section>
 
 <section id="projects" class="projects-section">
-  <h2>Projects</h2>
-
-  <!-- Example project card: copy this block for every project -->
+  
+  <!-- Example project card: copy this block for every project
   <article class="project-card">
     <h3>
       <a href="https://github.com/SurbhiKaushal/portfolio-website" target="_blank" rel="noopener noreferrer">
@@ -49,22 +48,86 @@
       <a class="btn btn-demo" href="https://surbhikaushal.github.io/portfolio-website/" target="_blank" rel="noopener noreferrer">Live Demo</a>
       <a class="btn btn-code" href="https://github.com/SurbhiKaushal/portfolio-website" target="_blank" rel="noopener noreferrer">View Code</a>
     </div>
-  </article>
+  </article>-->
   <!-- END example card -->
 </section>
-<article class="project-card">
-  <h3>
-    <a href="https://github.com/SurbhiKaushal/library-system" target="_blank" rel="noopener noreferrer">
-      Library Management System
-    </a>
-  </h3>
-  <p class="desc">A C-based project that manages books, users, and borrowing system.</p>
-  <div class="card-actions">
-    <!-- If you have a live demo, put it here -->
-    <!-- <a class="btn btn-demo" href="LIVE_DEMO_LINK" target="_blank" rel="noopener noreferrer">Live Demo</a> -->
-    <a class="btn btn-code" href="https://github.com/SurbhiKaushal/library-system" target="_blank" rel="noopener noreferrer">View Code</a>
-  </div>
-</article>
+  <!-- Projects section (auto-populate from GitHub) -->
+<section id="projects" class="projects-section">
+  <h2>My Projects</h2>
+  <div id="projects-grid">Loading projects…</div>
+</section>
+
+<style>
+/* Minimal styling — paste into your CSS file if you prefer */
+.projects-section { padding: 30px; max-width: 1000px; margin: 0 auto; font-family: Arial, sans-serif;}
+#projects-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-top:16px; }
+.project-card { border:1px solid #e9e9e9; padding:14px; border-radius:10px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.03); }
+.project-card h3 { margin:0 0 8px; font-size:1.05rem; }
+.project-card .desc { color:#444; min-height:44px; margin-bottom:8px; }
+.card-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.btn { padding:7px 12px; text-decoration:none; border-radius:6px; border:1px solid #cfcfcf; background:#fff; font-size:0.95rem; }
+.btn-demo { border-color:#2b6cb0; }
+.btn:hover { transform:translateY(-2px); transition:all .15s ease; box-shadow:0 6px 12px rgba(0,0,0,0.06); }
+</style>
+
+<script>
+(async function(){
+  const username = 'SurbhiKaushal'; // your GitHub username
+  // If you want only a few specific repos, list them EXACTLY (use repo NAME, not URL).
+  // Example: ['encryptor-chat-sim','password-checker'] -> replace with your exact repo names
+  const reposToShow = []; // <-- put exact repo names here if you want to limit to certain repos
+
+  const container = document.getElementById('projects-grid');
+  container.innerHTML = 'Loading projects…';
+
+  try {
+    const r = await fetch(`https://api.github.com/users/${username}/repos?per_page=200`);
+    if (!r.ok) throw new Error('GitHub API returned ' + r.status);
+    let repos = await r.json();
+    repos = repos.filter(x => !x.private && !x.archived);
+
+    let filtered = repos;
+    if (Array.isArray(reposToShow) && reposToShow.length) {
+      // case-insensitive matching and keep order of reposToShow
+      const lookup = reposToShow.map(s => s.toLowerCase());
+      filtered = repos.filter(repo => lookup.includes(repo.name.toLowerCase()))
+                      .sort((a,b) => lookup.indexOf(a.name.toLowerCase()) - lookup.indexOf(b.name.toLowerCase()));
+    } else {
+      filtered = repos.sort((a,b) => new Date(b.pushed_at) - new Date(a.pushed_at));
+    }
+
+    if (!filtered.length) {
+      container.innerHTML = '<p>No matching repositories found. Either leave <code>reposToShow</code> empty to show all repos, or add exact repo names in the script.</p>';
+      return;
+    }
+
+    container.innerHTML = filtered.map(repo => {
+      const title = repo.name;
+      const desc = repo.description ? repo.description : '';
+      // determine demo URL: prefer homepage, else use GitHub Pages if enabled
+      let demo = '';
+      if (repo.homepage) demo = repo.homepage;
+      else if (repo.has_pages) {
+        const uname = username.toLowerCase();
+        const rname = repo.name;
+        demo = (rname.toLowerCase() === `${uname}.github.io`) ? `https://${username.toLowerCase()}.github.io/` : `https://${username.toLowerCase()}.github.io/${rname}/`;
+      }
+      return `
+        <article class="project-card">
+          <h3><a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">${title}</a></h3>
+          <p class="desc">${desc}</p>
+          <div class="card-actions">
+            ${demo ? `<a class="btn btn-demo" href="${demo}" target="_blank" rel="noopener noreferrer">Live Demo</a>` : ''}
+            <a class="btn btn-code" href="${repo.html_url}" target="_blank" rel="noopener noreferrer">View Code</a>
+          </div>
+        </article>`;
+    }).join('');
+  } catch (err) {
+    container.innerHTML = '<p>Error loading projects: ' + err.message + '</p>';
+    console.error(err);
+  }
+})();
+</script>
 
 
 
